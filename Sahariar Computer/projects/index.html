@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sahariar Computer & Gadget</title>
+  <link rel="icon" href="logo.png" />
+  <style>
+    /* Basic Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background: #f5f6fa;
+      color: #222;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #0066ff, #00ccff);
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+      animation: fadeIn 1.5s ease;
+    }
+
+    header h1 {
+      font-size: 2.5em;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    header h2 {
+      font-size: 1.2em;
+      font-weight: 400;
+      margin-top: 5px;
+    }
+
+    /* Owner Info */
+    .info {
+      background: rgb(224, 224, 224);
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .info:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .info p {
+      margin: 8px 0;
+      font-size: 1.2rem;
+    }
+
+    .highlight {
+      color: #0066ff;
+      font-weight: 600;
+    }
+
+    /* Projects Section */
+    section {
+      max-width: 1200px;
+      margin: 60px auto;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    section h2 {
+      font-size: 2em;
+      margin-bottom: 25px;
+      color: #333;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+
+    .project-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      transition: 0.3s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .project-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .project-content {
+      padding: 20px;
+    }
+
+    .project-content h3 a {
+      text-decoration: none;
+      color: #0066ff;
+      font-size: 1.2em;
+    }
+
+    .project-content p {
+      margin: 10px 0;
+      color: #555;
+      font-size: 0.95em;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #0066ff, #00ccff);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: 0.3s;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      background: linear-gradient(135deg, #0055cc, #0099cc);
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+      color: #666;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Sahariar Computer & Gadget</h1>
+    <h2>Digital Solution & Printing Center</h2>
+  </header>
+
+  <div class="info">
+    <p><strong>Owner:</strong> <span class="highlight">Sahariar Sagor</span></p>
+    <p><strong>Email:</strong> <a href="mailto:contactsahariar@gmail.com">contactsahariar@gmail.com</a></p>
+    <p><strong>WhatsApp:</strong> <a href="https://wa.me/8801819549286">01819549286</a></p>
+  </div>
+
+  <section>
+    <h2>Our Projects</h2>
+    <div class="projects">
+      <!-- Project 1 -->
+      <div class="project-card">
+        <img src="./images/cv.png" alt="Project 1" />
+        <div class="project-content">
+          <h3><a href="#">Automatic CV Maker | Sahariar</a></h3>
+          <p>Its a  project about automatic cv maker. just insert your information and make  a emergency cv with this app. </p>
+          <a href="./cv maker/index.html" class="btn">Explore Now</a>
+        </div>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="project-card">
+        <img src="./images/invoice.png" alt="Project 2" />
+        <div class="project-content">
+          <h3><a href="#">Invoice Generator | Sahariar</a></h3>
+          <p>Its a project about invoice generator. you can generate a invoice in pdf form with the help of this app. </p>
+          <a href="./invoice maker/index.html" class="btn">Explore Now</a>
+        </div>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="project-card">
+        <img src="./images/businesstracker.png" alt="Project 3" />
+        <div class="project-content">
+          <h3><a href="#">Business Tracker</a></h3>
+          <p>A simple business tracker webapp that use your local storage and you should track your business like income, expense, due, personal expense and generate a overall report in pdf form. </p>
+          <a href="./DailyBusinessTracker/index.html" class="btn">Explore Now</a>
+        </div>
+      </div>
+
+      <!-- Project 4 -->
+      <!-- <div class="project-card">
+        <img src="https://via.placeholder.com/400x250" alt="Project 4" />
+        <div class="project-content">
+          <h3><a href="#">Project Four</a></h3>
+          <p>Online receipt generator for shops and freelancers with PDF download.</p>
+          <a href="#" class="btn">Explore Now</a>
+        </div> -->
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 Sahariar Computer & Gadget — All Rights Reserved.
+  </footer>
+</body>
+</html>

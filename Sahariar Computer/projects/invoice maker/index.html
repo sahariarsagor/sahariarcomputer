@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="Website icon" href="./images/icon.jpeg">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+
+        .product-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .product-row input {
+            flex: 1;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px;
+            width: 100%;
+            background: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        button.print {
+            background: green;
+        }
+
+        h2{
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Invoice Generator</h2>
+
+    <label>Receipt Name</label>
+    <input type="text" id="receipt">
+
+    <label>Date</label>
+    <input type="date" id="date">
+
+    <label>Mobile No</label>
+    <input type="text" id="mobile">
+
+    <h3>Products</h3>
+    <div id="products"></div>
+    <button type="button" onclick="addProduct()">+ Add Product</button>
+
+    <button onclick="generatePDF()">Download PDF</button>
+    <button class="print" onclick="window.print()">Print Receipt</button>
+
+    <script>
+        // Add product row
+        function addProduct() {
+            let container = document.getElementById("products");
+            let div = document.createElement("div");
+            div.className = "product-row";
+            div.innerHTML = `
+        <input type="text" placeholder="Product Name" class="pname">
+        <input type="number" placeholder="Price" class="pprice">
+      `;
+            container.appendChild(div);
+        }
+
+        async function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Fixed Company Name (center top, big font)
+            doc.setFontSize(18);
+            doc.text("Sahariar Computer & Gadget", 105, 20, { align: "center" });
+
+            // Receipt details
+            let receipt = document.getElementById("receipt").value;
+            let date = document.getElementById("date").value;
+            let mobile = document.getElementById("mobile").value;
+
+            doc.setFontSize(12);
+            doc.text("Receipt Name: " + receipt, 20, 40);
+            doc.text("Date: " + date, 20, 50);
+            doc.text("Mobile: " + mobile, 20, 60);
+
+            // Products table header
+            doc.setFontSize(13);
+            doc.text("Products", 20, 80);
+            doc.line(20, 85, 190, 85); // line under header
+
+            let y = 95;
+            let productRows = document.querySelectorAll(".product-row");
+            let total = 0;
+
+            productRows.forEach(row => {
+                let pname = row.querySelector(".pname").value;
+                let pprice = parseFloat(row.querySelector(".pprice").value) || 0;
+
+                doc.text(pname, 25, y);
+                doc.text(pprice.toFixed(2) + " BDT", 160, y, { align: "right" });
+
+                total += pprice;
+                y += 10;
+            });
+
+            // Total
+            doc.line(20, y, 190, y);
+            y += 10;
+            doc.setFontSize(13);
+            doc.text("Total: " + total.toFixed(2) + " BDT", 25, y);
+
+            // Footer
+            doc.setFontSize(15);
+            let footerText = "Thank you for staying with Shaharia Computer & Gadget Store.\nWe are committed to providing accurate and reliable service.";
+            doc.text(footerText, 105, 280, { align: "center" });
+
+            // Save PDF
+            doc.save("receipt.pdf");
+
+            // Reset form after download
+            document.getElementById("receipt").value = "";
+            document.getElementById("date").value = "";
+            document.getElementById("mobile").value = "";
+            document.getElementById("products").innerHTML = "";
+            addProduct(); // add one empty product row again
+        }
+
+        // Add one product row by default
+        window.onload = () => addProduct();
+    </script>
+</body>
+
+</html>

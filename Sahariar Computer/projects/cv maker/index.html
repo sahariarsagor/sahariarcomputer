@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CV Maker|Sahariar Sagor </title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="website icon" href="./images/icon.png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(120deg, #89f7fe, #66a6ff);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    form {
+      width: 95%;
+      max-width: 750px;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 12px;
+      color: #444;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: #007BFF;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      background: #007BFF;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    h3 {
+      margin-top: 20px;
+      color: #007BFF;
+      border-left: 4px solid #007BFF;
+      padding-left: 8px;
+    }
+    @media (max-width: 600px) {
+      form { padding: 15px; }
+      button { font-size: 14px; padding: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <form id="cvForm">
+    <h1>CV Maker</h1>
+    <label>Full Name:</label>
+    <input type="text" id="name" required>
+
+    <label>Photo:</label>
+    <input type="file" id="photo" accept="image/*">
+
+    <label>Mobile No:</label>
+    <input type="text" id="mobile">
+
+    <label>Mailing Address:</label>
+    <input type="text" id="mail">
+
+    <h3>Personal Information</h3>
+    <label>Father Name:</label>
+    <input type="text" id="father">
+    <label>Mother Name:</label>
+    <input type="text" id="mother">
+    <label>Present Address:</label>
+    <textarea id="present"></textarea>
+    <label>Permanent Address:</label>
+    <textarea id="permanent"></textarea>
+    <label>Date of Birth:</label>
+    <input type="date" id="dob">
+    <label>NID No:</label>
+    <input type="text" id="nid">
+    <label>Nationality:</label>
+    <input type="text" id="nationality">
+    <label>Religion:</label>
+    <input type="text" id="religion">
+    <label>Sex:</label>
+    <select id="sex">
+      <option value="">Select</option>
+      <option>Male</option>
+      <option>Female</option>
+      <option>Other</option>
+    </select>
+    <label>Height:</label>
+    <input type="text" id="height">
+    <label>Weight:</label>
+    <input type="text" id="weight">
+    <label>Blood Group:</label>
+    <input type="text" id="blood">
+
+    <h3>Educational Qualification</h3>
+    <textarea id="education"></textarea>
+
+    <h3>Experience</h3>
+    <textarea id="experience"></textarea>
+
+    <h3>Declaration</h3>
+    <textarea id="declaration"></textarea>
+
+    <label>Signature:</label>
+    <input type="text" id="signature">
+
+    <button type="button" onclick="generatePDF()">Submit & Download CV</button>
+  </form>
+
+  <script>
+    function generatePDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const form = document.getElementById("cvForm");
+
+      const getVal = id => document.getElementById(id).value;
+
+      const data = {
+        name: getVal("name"),
+        photo: document.getElementById("photo").files[0],
+        mobile: getVal("mobile"),
+        mail: getVal("mail"),
+        father: getVal("father"),
+        mother: getVal("mother"),
+        present: getVal("present"),
+        permanent: getVal("permanent"),
+        dob: getVal("dob"),
+        nid: getVal("nid"),
+        nationality: getVal("nationality"),
+        religion: getVal("religion"),
+        sex: getVal("sex"),
+        height: getVal("height"),
+        weight: getVal("weight"),
+        blood: getVal("blood"),
+        education: getVal("education"),
+        experience: getVal("experience"),
+        declaration: getVal("declaration"),
+        signature: getVal("signature")
+      };
+
+      let y = 20;
+      doc.setFont("helvetica","bold");
+      doc.setFontSize(18);
+      doc.text("Curriculum Vitae", 105, y, { align: "center" });
+      y += 20;
+
+      function addContent() {
+        doc.setFontSize(12);
+
+        doc.setFont(undefined,"bold");
+        doc.text("Personal Details", 20, y); y+=8;
+        doc.setFont(undefined,"normal");
+        doc.text(`Name: ${data.name}`, 20, y); y+=7;
+        doc.text(`Mobile: ${data.mobile}`, 20, y); y+=7;
+        doc.text(`Email: ${data.mail}`, 20, y); y+=12;
+
+        doc.setFont(undefined,"bold");
+        doc.text("Personal Information", 20, y); y+=8;
+        doc.setFont(undefined,"normal");
+        doc.text(`Father: ${data.father}`, 30, y); y+=7;
+        doc.text(`Mother: ${data.mother}`, 30, y); y+=7;
+        doc.text(`Present Address: ${data.present}`, 30, y); y+=7;
+        doc.text(`Permanent Address: ${data.permanent}`, 30, y); y+=7;
+        doc.text(`DOB: ${data.dob}`, 30, y); y+=7;
+        doc.text(`NID: ${data.nid}`, 30, y); y+=7;
+        doc.text(`Nationality: ${data.nationality}`, 30, y); y+=7;
+        doc.text(`Religion: ${data.religion}`, 30, y); y+=7;
+        doc.text(`Sex: ${data.sex}`, 30, y); y+=7;
+        doc.text(`Height: ${data.height}`, 30, y); y+=7;
+        doc.text(`Weight: ${data.weight}`, 30, y); y+=7;
+        doc.text(`Blood Group: ${data.blood}`, 30, y); y+=12;
+
+        doc.setFont(undefined,"bold");
+        doc.text("Educational Qualification", 20, y); y+=8;
+        doc.setFont(undefined,"normal");
+        doc.text(data.education || "-", 30, y); y+=15;
+
+        doc.setFont(undefined,"bold");
+        doc.text("Experience", 20, y); y+=8;
+        doc.setFont(undefined,"normal");
+        doc.text(data.experience || "-", 30, y); y+=15;
+
+        doc.setFont(undefined,"bold");
+        doc.text("Declaration", 20, y); y+=8;
+        doc.setFont(undefined,"normal");
+        doc.text(data.declaration || "-", 30, y); y+=15;
+
+        doc.setFont(undefined,"bold");
+        doc.text("Signature", 150, y);
+        doc.setFont(undefined,"normal");
+        doc.text(data.signature || "__________", 170, y);
+      }
+
+      if (data.photo) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          doc.addImage(e.target.result, "JPEG", 160, 25, 40, 40);
+          addContent();
+          doc.save((data.name || "My") + "_CV.pdf");
+          form.reset();
+        };
+        reader.readAsDataURL(data.photo);
+      } else {
+        doc.text("[Add Photo]", 170, 50);
+        addContent();
+        doc.save((data.name || "My") + "_CV.pdf");
+        form.reset();
+      }
+    }
+  </script>
+</body>
+</html>
+

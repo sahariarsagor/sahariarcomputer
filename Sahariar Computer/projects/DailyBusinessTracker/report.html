@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Daily Report</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen py-6">
+
+  <div class="max-w-5xl mx-auto px-4">
+    <!-- Header -->
+    <header class="text-center mb-4">
+      <h1 class="text-3xl font-bold">Daily Report</h1>
+      <p id="reportDate" class="text-sm text-gray-600 mt-1"></p>
+    </header>
+
+    <!-- Shop Info -->
+    <section class="bg-white rounded-lg shadow p-4 mb-6">
+      <h2 class="font-semibold mb-3">Shop Info (this will appear on PDF)</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <input id="shopName" type="text" placeholder="Shop Name" class="border rounded p-2" />
+        <input id="ownerName" type="text" placeholder="Owner Name" class="border rounded p-2" />
+        <input id="ownerContact" type="text" placeholder="Contact Number" class="border rounded p-2" />
+        <input id="mailingAddress" type="text" placeholder="Mailing Address" class="border rounded p-2" />
+      </div>
+      <div class="mt-3 flex gap-2 items-center">
+        <button id="saveShopInfo" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Save Shop
+          Info</button>
+        <button id="loadShopInfo" class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">Reload Saved Info</button>
+        <span id="shopSavedMsg" class="ml-3 text-sm text-green-600 hidden">Saved ✓</span>
+      </div>
+    </section>
+
+    <!-- Sections -->
+    <div class="space-y-6">
+      <!-- Income -->
+      <section class="bg-white rounded-lg shadow p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-semibold text-lg text-green-700">Income</h3>
+        </div>
+        <div class="flex flex-col md:flex-row gap-2 mb-3">
+          <input id="incomeName" class="border rounded p-2 flex-1" placeholder="Product name" />
+          <input id="incomeQty" class="border rounded p-2 w-32" placeholder="Qty" type="number" min="0" />
+          <input id="incomeAmount" class="border rounded p-2 w-40" placeholder="Amount (unit price)" type="number"
+            min="0" />
+          <button id="addIncomeBtn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Add</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-green-50">
+              <tr>
+                <th class="border p-2">Name</th>
+                <th class="border p-2">Qty</th>
+                <th class="border p-2">Amount</th>
+                <th class="border p-2">Total</th>
+              </tr>
+            </thead>
+            <tbody id="incomeList"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Due -->
+      <section class="bg-white rounded-lg shadow p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-semibold text-lg text-yellow-700">Due</h3>
+        </div>
+        <div class="flex flex-col md:flex-row gap-2 mb-3">
+          <input id="dueCustomer" class="border rounded p-2 flex-1" placeholder="Customer name" />
+          <input id="dueAmount" class="border rounded p-2 w-40" placeholder="Amount" type="number" min="0" />
+          <button id="addDueBtn" class="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700">Add</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-yellow-50">
+              <tr>
+                <th class="border p-2">Customer</th>
+                <th class="border p-2">Amount</th>
+              </tr>
+            </thead>
+            <tbody id="dueList"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Expense -->
+      <section class="bg-white rounded-lg shadow p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-semibold text-lg text-red-700">Expense</h3>
+        </div>
+        <div class="flex flex-col md:flex-row gap-2 mb-3">
+          <input id="expenseTitle" class="border rounded p-2 flex-1" placeholder="Expense title" />
+          <input id="expenseAmount" class="border rounded p-2 w-40" placeholder="Amount" type="number" min="0" />
+          <button id="addExpenseBtn" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Add</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-red-50">
+              <tr>
+                <th class="border p-2">Title</th>
+                <th class="border p-2">Amount</th>
+              </tr>
+            </thead>
+            <tbody id="expenseList"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Purchase -->
+      <section class="bg-white rounded-lg shadow p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-semibold text-lg text-blue-700">Purchase</h3>
+        </div>
+        <div class="flex flex-col md:flex-row gap-2 mb-3">
+          <input id="purchaseProduct" class="border rounded p-2 flex-1" placeholder="Product" />
+          <input id="purchaseModel" class="border rounded p-2 w-40" placeholder="Model" />
+          <input id="purchaseAmount" class="border rounded p-2 w-40" placeholder="Amount" type="number" min="0" />
+          <button id="addPurchaseBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-blue-50">
+              <tr>
+                <th class="border p-2">Product</th>
+                <th class="border p-2">Model</th>
+                <th class="border p-2">Amount</th>
+              </tr>
+            </thead>
+            <tbody id="purchaseList"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Total Summary -->
+    <section class="bg-white rounded-lg shadow p-4 mt-6">
+      <h3 class="font-semibold mb-3">Total Summary</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-gray-800">
+        <div class="bg-gray-50 p-3 rounded">Total Income: <span id="totalIncome" class="font-bold">0.00</span> Taka
+        </div>
+        <div class="bg-gray-50 p-3 rounded">Total Due: <span id="totalDue" class="font-bold">0.00</span> Taka</div>
+        <div class="bg-gray-50 p-3 rounded">Total Expense: <span id="totalExpense" class="font-bold">0.00</span> Taka
+        </div>
+        <div class="bg-gray-50 p-3 rounded">Total Purchase: <span id="totalPurchase" class="font-bold">0.00</span> Taka
+        </div>
+        <div class="md:col-span-3 bg-green-50 p-3 rounded text-lg font-semibold text-green-700">Net Income: <span
+            id="netIncome">0.00</span> Taka</div>
+      </div>
+      <div class="mt-4 text-right">
+        <button id="generatePDF" class="bg-gray-800 text-white px-6 py-2 rounded hover:bg-black">Generate PDF</button>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    // ----- utilities & date -----
+    const urlParams = new URLSearchParams(window.location.search);
+    const dateKey = urlParams.get('date') || new Date().toISOString().split('T')[0];
+    document.getElementById('reportDate').innerText = 'Date: ' + dateKey;
+
+    // ----- Shop info save/load -----
+    const shopInputs = ['shopName', 'ownerName', 'ownerContact', 'mailingAddress'];
+    function saveShopInfo() {
+      const info = {};
+      shopInputs.forEach(id => info[id] = document.getElementById(id).value.trim());
+      localStorage.setItem('shopInfo', JSON.stringify(info));
+      const msg = document.getElementById('shopSavedMsg');
+      msg.classList.remove('hidden');
+      setTimeout(() => msg.classList.add('hidden'), 1500);
+    }
+    function loadShopInfo() {
+      const info = JSON.parse(localStorage.getItem('shopInfo') || '{}');
+      shopInputs.forEach(id => document.getElementById(id).value = info[id] || '');
+    }
+    document.getElementById('saveShopInfo').addEventListener('click', saveShopInfo);
+    document.getElementById('loadShopInfo').addEventListener('click', loadShopInfo);
+    loadShopInfo();
+
+    // ----- Records helpers -----
+    function getRecords() {
+      try {
+        return JSON.parse(localStorage.getItem('records') || '{}');
+      } catch (e) {
+        // if corrupted JSON, reset
+        console.warn('records corrupted, resetting');
+        localStorage.removeItem('records');
+        return {};
+      }
+    }
+
+    // Ensure data for date exists and normalized (numbers as numbers)
+    function getData() {
+      const rec = getRecords();
+      if (!rec[dateKey]) {
+        rec[dateKey] = { income: [], due: [], expense: [], purchase: [] };
+        localStorage.setItem('records', JSON.stringify(rec));
+      }
+      const raw = rec[dateKey];
+      const normalized = {
+        income: (raw.income || []).map(i => ({
+          name: String(i.name || ''),
+          qty: Number(i.qty) || 0,
+          amount: Number(i.amount) || 0
+        })),
+        due: (raw.due || []).map(i => ({
+          customer: String(i.customer || ''),
+          amount: Number(i.amount) || 0
+        })),
+        expense: (raw.expense || []).map(i => ({
+          title: String(i.title || ''),
+          amount: Number(i.amount) || 0
+        })),
+        purchase: (raw.purchase || []).map(i => ({
+          product: String(i.product || ''),
+          model: String(i.model || ''),
+          amount: Number(i.amount) || 0
+        }))
+      };
+      // write back normalized (ensures old string-values corrected)
+      rec[dateKey] = normalized;
+      localStorage.setItem('records', JSON.stringify(rec));
+      return normalized;
+    }
+
+    function persistData(data) {
+      const rec = getRecords();
+      rec[dateKey] = data;
+      localStorage.setItem('records', JSON.stringify(rec));
+      // update totals after persisting
+      updateTotals();
+    }
+
+    // ----- Render lists (no totals call inside) -----
+    function renderList(type) {
+      const data = getData()[type] || [];
+      const tbody = document.getElementById(type + 'List');
+      tbody.innerHTML = '';
+      data.forEach(item => {
+        const tr = document.createElement('tr');
+        if (type === 'income') {
+          const total = (Number(item.amount) || 0) * (Number(item.qty) || 0);
+          tr.innerHTML = `<td class="border p-2">${escapeHtml(item.name)}</td><td class="border p-2">${formatNumber(item.qty)}</td><td class="border p-2">${formatNumber(item.amount)}</td><td class="border p-2">${formatNumber(total)}</td>`;
+        } else if (type === 'due') {
+          tr.innerHTML = `<td class="border p-2">${escapeHtml(item.customer)}</td><td class="border p-2">${formatNumber(item.amount)}</td>`;
+        } else if (type === 'expense') {
+          tr.innerHTML = `<td class="border p-2">${escapeHtml(item.title)}</td><td class="border p-2">${formatNumber(item.amount)}</td>`;
+        } else if (type === 'purchase') {
+          tr.innerHTML = `<td class="border p-2">${escapeHtml(item.product)}</td><td class="border p-2">${escapeHtml(item.model)}</td><td class="border p-2">${formatNumber(item.amount)}</td>`;
+        }
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderAll() {
+      ['income', 'due', 'expense', 'purchase'].forEach(renderList);
+      updateTotals();
+    }
+
+    // ----- formatting helpers -----
+    function formatNumber(n) { return (Number(n) || 0).toFixed(2); }
+    function escapeHtml(str) { if (!str) return ''; return String(str).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;'); }
+
+    // ----- totals -----
+    function updateTotals() {
+      const d = getData();
+      const totIncome = (d.income || []).reduce((acc, it) => acc + ((Number(it.amount) || 0) * (Number(it.qty) || 0)), 0);
+      const totDue = (d.due || []).reduce((acc, it) => acc + (Number(it.amount) || 0), 0);
+      const totExpense = (d.expense || []).reduce((acc, it) => acc + (Number(it.amount) || 0), 0);
+      const totPurchase = (d.purchase || []).reduce((acc, it) => acc + (Number(it.amount) || 0), 0);
+      const net = totIncome - (totDue + totExpense + totPurchase);
+
+      document.getElementById('totalIncome').innerText = formatNumber(totIncome);
+      document.getElementById('totalDue').innerText = formatNumber(totDue);
+      document.getElementById('totalExpense').innerText = formatNumber(totExpense);
+      document.getElementById('totalPurchase').innerText = formatNumber(totPurchase);
+      document.getElementById('netIncome').innerText = formatNumber(net);
+    }
+
+    // ----- add handlers with strict parsing & validation -----
+    document.getElementById('addIncomeBtn').addEventListener('click', () => {
+      const name = document.getElementById('incomeName').value.trim();
+      const qtyRaw = document.getElementById('incomeQty').value;
+      const amountRaw = document.getElementById('incomeAmount').value;
+      const qty = Number(qtyRaw);
+      const amount = Number(amountRaw);
+      if (!name || !isFinite(qty) || qty <= 0 || !isFinite(amount) || amount <= 0) {
+        return alert('Please fill name, qty (>0) and amount (>0) for income.');
+      }
+      const data = getData();
+      data.income.push({ name, qty, amount });
+      persistData(data);
+      document.getElementById('incomeName').value = ''; document.getElementById('incomeQty').value = ''; document.getElementById('incomeAmount').value = '';
+      renderList('income');
+    });
+
+    document.getElementById('addDueBtn').addEventListener('click', () => {
+      const customer = document.getElementById('dueCustomer').value.trim();
+      const amountRaw = document.getElementById('dueAmount').value;
+      const amount = Number(amountRaw);
+      if (!customer || !isFinite(amount) || amount <= 0) return alert('Please fill customer and amount (>0) for due.');
+      const data = getData();
+      data.due.push({ customer, amount });
+      persistData(data);
+      document.getElementById('dueCustomer').value = ''; document.getElementById('dueAmount').value = '';
+      renderList('due');
+    });
+
+    document.getElementById('addExpenseBtn').addEventListener('click', () => {
+      const title = document.getElementById('expenseTitle').value.trim();
+      const amountRaw = document.getElementById('expenseAmount').value;
+      const amount = Number(amountRaw);
+      if (!title || !isFinite(amount) || amount <= 0) return alert('Please fill title and amount (>0) for expense.');
+      const data = getData();
+      data.expense.push({ title, amount });
+      persistData(data);
+      document.getElementById('expenseTitle').value = ''; document.getElementById('expenseAmount').value = '';
+      renderList('expense');
+    });
+
+    document.getElementById('addPurchaseBtn').addEventListener('click', () => {
+      const product = document.getElementById('purchaseProduct').value.trim();
+      const model = document.getElementById('purchaseModel').value.trim();
+      const amountRaw = document.getElementById('purchaseAmount').value;
+      const amount = Number(amountRaw);
+      if (!product || !model || !isFinite(amount) || amount <= 0) return alert('Please fill product, model and amount (>0) for purchase.');
+      const data = getData();
+      data.purchase.push({ product, model, amount });
+      persistData(data);
+      document.getElementById('purchaseProduct').value = ''; document.getElementById('purchaseModel').value = ''; document.getElementById('purchaseAmount').value = '';
+      renderList('purchase');
+    });
+
+    // initial render
+    renderAll();
+
+    // ----- PDF generation (no emoji, English labels, "Taka") -----
+    document.getElementById('generatePDF').addEventListener('click', () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+      const pageWidth = doc.internal.pageSize.getWidth();
+      let y = 40;
+
+      // shop info
+      const shop = JSON.parse(localStorage.getItem('shopInfo') || '{}');
+      const shopName = shop.shopName && shop.shopName.trim() ? shop.shopName.trim() : 'Shop Name';
+      const owner = shop.ownerName || '';
+      const contact = shop.ownerContact || '';
+      const address = shop.mailingAddress || '';
+
+      // header centered
+      doc.setFontSize(18);
+      doc.text(shopName, pageWidth / 2, y, { align: 'center' });
+      y += 18;
+      doc.setFontSize(10);
+      if (owner) { doc.text(`Owner: ${owner}`, pageWidth / 2, y, { align: 'center' }); y += 12; }
+      if (contact) { doc.text(`Contact: ${contact}`, pageWidth / 2, y, { align: 'center' }); y += 12; }
+      if (address) { doc.text(`${address}`, pageWidth / 2, y, { align: 'center' }); y += 16; }
+
+      doc.setFontSize(11);
+      doc.text(`Date: ${dateKey}`, 40, y);
+      y += 16;
+
+      const data = getData();
+
+      const printSection = (title, list, formatter) => {
+        if ((list || []).length === 0) return;
+        doc.setFontSize(12);
+        doc.text(title, 40, y); y += 14;
+        doc.setFontSize(10);
+        list.forEach(row => {
+          const text = formatter(row);
+          if (y > doc.internal.pageSize.getHeight() - 60) { doc.addPage(); y = 40; }
+          doc.text(text, 48, y);
+          y += 12;
+        });
+        y += 6;
+      };
+
+      printSection('Income', data.income, r => `${r.name} - ${formatNumber(r.qty)} x ${formatNumber(r.amount)} = ${formatNumber((r.qty || 0) * (r.amount || 0))} Taka`);
+      printSection('Due', data.due, r => `${r.customer} - ${formatNumber(r.amount)} Taka`);
+      printSection('Expense', data.expense, r => `${r.title} - ${formatNumber(r.amount)} Taka`);
+      printSection('Purchase', data.purchase, r => `${r.product} (${r.model}) - ${formatNumber(r.amount)} Taka`);
+
+      // totals
+      const totalIncome = (data.income || []).reduce((a, b) => a + ((Number(b.amount) || 0) * (Number(b.qty) || 0)), 0);
+      const totalDue = (data.due || []).reduce((a, b) => a + (Number(b.amount) || 0), 0);
+      const totalExpense = (data.expense || []).reduce((a, b) => a + (Number(b.amount) || 0), 0);
+      const totalPurchase = (data.purchase || []).reduce((a, b) => a + (Number(b.amount) || 0), 0);
+      const netIncome = totalIncome - (totalDue + totalExpense + totalPurchase);
+
+      if (y > doc.internal.pageSize.getHeight() - 120) { doc.addPage(); y = 40; }
+      y += 6;
+      doc.setFontSize(11);
+      doc.text(`Total Income: ${formatNumber(totalIncome)} Taka`, 40, y); y += 14;
+      doc.text(`Total Due: ${formatNumber(totalDue)} Taka`, 40, y); y += 14;
+      doc.text(`Total Expense: ${formatNumber(totalExpense)} Taka`, 40, y); y += 14;
+      doc.text(`Total Purchase: ${formatNumber(totalPurchase)} Taka`, 40, y); y += 16;
+      doc.setFontSize(12);
+      doc.text(`Net Income: ${formatNumber(netIncome)} Taka`, 40, y);
+
+      doc.save(`Report-${dateKey}.pdf`);
+    });
+
+    // helper used by PDF
+    function formatNumber(n) { return (Number(n) || 0).toFixed(2); }
+  </script>
+</body>
+
+</html>

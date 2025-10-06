@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Report Landing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
+
+  <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-4 text-center text-blue-700">📅 দৈনিক রিপোর্ট</h1>
+
+    <label for="reportDatePicker" class="block mb-2 font-semibold">তারিখ নির্বাচন করুন:</label>
+    <input type="date" id="reportDatePicker" class="w-full border p-2 rounded mb-4">
+
+    <button id="goReport" class="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded font-bold">➡️ রিপোর্ট দেখুন</button>
+  </div>
+
+  <script>
+    const goBtn = document.getElementById("goReport");
+    goBtn.addEventListener("click", ()=>{
+      const date = document.getElementById("reportDatePicker").value;
+      if(!date) return alert("অনুগ্রহ করে একটি তারিখ নির্বাচন করুন!");
+      window.location.href = `report.html?date=${date}`;
+    });
+  </script>
+
+</body>
+</html>
